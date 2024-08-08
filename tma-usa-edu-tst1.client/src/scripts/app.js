@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 var detailsBox = document.getElementById('details-box');
 
 document.addEventListener('mouseover', function (e) {
@@ -22,7 +23,8 @@ function getRandomColor() {
     var letters = '0123456789ABCDEF'.split('');
     var color = '#';
     for (var i = 0; i < 6; i++) {
+        // eslint-disable-next-line no-unused-vars
         color += letters[Math.floor(Math.random() * 16)];
     }
-    $('path').css('color', color);
+    //$('path').css('color', color);
 }
