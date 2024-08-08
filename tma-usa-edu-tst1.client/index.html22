@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <title>Uni-Map</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+        #container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        #details-box {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+    </style>
+    <script src="https://telegram.org/js/telegram-web-app.js?2"></script>
+    <script>
+        function setThemeClass() {
+            document.documentElement.className = Telegram.WebApp.colorScheme;
+        }
+
+        Telegram.WebApp.onEvent('themeChanged', setThemeClass);
+        setThemeClass();
+
+    </script>
+</head>
+<body>
+
+   
+
+    <!-- /container -->
+    <div id="container">
+        <script src="src/scripts/raphael-min.js"></script>
+        <script src="src/scripts/app.js"></script>
+        <script src="src/scripts/file.js"></script>
+    </div>
+    <div id="details-box">
+        <script>
+            window.onload = function () {
+                var R = Raphael("container", 300, 300),
+                    attr = {
+                        "fill": "#d3d3d3",
+                        "stroke": "#fff",
+                        "stroke-opacity": "1",
+                        "stroke-linejoin": "round",
+                        "stroke-miterlimit": "4",
+                        "stroke-width": "0.75",
+                        "stroke-dasharray": "none"
+                    },
+                    usRaphael = {};
+
+                //Draw Map and store Raphael paths
+                for (var state in usMap) {
+                    usRaphael[state] = R.path(usMap[state]).attr(attr);
+                }
+
+                //Do Work on Map
+                for (var state in usRaphael) {
+                    usRaphael[state].color = Raphael.getColor();
+
+                    (function (st, state) {
+
+                        st[0].style.cursor = "pointer";
+
+                        st[0].onmouseover = function () {
+                            st.animate({ fill: st.color }, 500);
+                            st.toFront();
+                            R.safari();
+                        };
+
+                        st[0].onmouseout = function () {
+                            st.animate({ fill: "#d3d3d3" }, 500);
+                            st.toFront();
+                            R.safari();
+                        };
+
+                    })(usRaphael[state], state);
+                }
+                var tooltipSpan = document.getElementById('details-box');
+
+                document.addEventListener('mouseover', function (e) {
+                    if (e.target.tagName == 'path') {
+                        var content = e.target.dataset.name;
+                        document.getElementById("details-box").innerHTML = content;
+                        document.getElementById("details-box").style.opacity = "100%";
+                    }
+                    else {
+                        document.getElementById("details-box").style.opacity = "0%";
+                    }
+                });
+
+                window.onmousemove = function (e) {
+                    var x = e.clientX,
+                        y = e.clientY;
+                    tooltipSpan.style.top = (y + 20) + 'px';
+                    tooltipSpan.style.left = (x) + 'px';
+                };
+
+            };
+        </script>
+    </div>
+
+</body>
+</html>
